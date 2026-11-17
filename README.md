@@ -47,16 +47,16 @@ React Compiler 会把组件里的计算换成带缓存槽的形式：它自己�
 
 三种写法的差别只在「那个计数有没有参与」：
 
-- `void version;` 读一下丢掉。
+- `void clickCount;` 读一下丢掉。
 - 同样的写法加 `"use no memo"`，编译器不碰这个组件。
-- `readNowAt(version)` 把计数当参数传进去，函数体照样忽略它。
+- `readNowAt(clickCount)` 把计数当参数传进去，函数体照样忽略它。
 
 ### 3. 编译结果
 
 `void` 版：读取被折成一次，判断里没有那个计数。
 
 ```js
-const version = useVersion();
+const clickCount = useClickCount();
 let t0;
 if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
   t0 = readNow();
@@ -70,11 +70,11 @@ const snapshot = t0;
 传参版：判断就是那个计数，每点一次都重算。
 
 ```js
-const version = useVersion();
+const clickCount = useClickCount();
 let t0;
-if ($[0] !== version) {
-  t0 = readNowAt(version);
-  $[0] = version;
+if ($[0] !== clickCount) {
+  t0 = readNowAt(clickCount);
+  $[0] = clickCount;
   $[1] = t0;
 } else {
   t0 = $[1];

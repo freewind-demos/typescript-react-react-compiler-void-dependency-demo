@@ -12,11 +12,14 @@ export function VoidDepPanel() {
   const clickCount = useClickCount();
 
   const snapshot = useMemo(() => {
-    // 本次实验的主角：我们依赖它刷新memo
+    // 本次实验的主角：我们依赖它刷新memo得到当前新时间
     void clickCount;
     console.log("### clickCount", clickCount);
     return readNow();
-  }, [clickCount]);
+  }, [
+    // 显式依赖
+    clickCount
+  ]);
 
   return (
     <section>
