@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { readNow, readNowAt, useVersion } from "./store";
+import { readNow, readNowAt, useClickCount } from "./store";
 
 // 三个面板只显示一项：缓存里留下的时间戳。
 // 它不变＝那段计算没重跑；它跟着点＝重算了。
@@ -9,13 +9,14 @@ import { readNow, readNowAt, useVersion } from "./store";
  * 但点击次数只被 `void` 读一次，对返回值没有影响。
  */
 export function VoidDepPanel() {
-  const version = useVersion();
+  const clickCount = useClickCount();
 
   const snapshot = useMemo(() => {
-    // 本次实验的主角：读了一下，然后丢掉。
-    void version;
+    // 本次实验的主角：我们依赖它刷新memo
+    void clickCount;
+    console.log("### clickCount", clickCount);
     return readNow();
-  }, [version]);
+  }, [clickCount]);
 
   return (
     <section>
@@ -31,12 +32,12 @@ export function VoidDepPanel() {
  */
 export function NoMemoPanel() {
   "use no memo";
-  const version = useVersion();
+  const clickCount = useClickCount();
 
   const snapshot = useMemo(() => {
-    void version;
+    void clickCount;
     return readNow();
-  }, [version]);
+  }, [clickCount]);
 
   return (
     <section>
@@ -51,8 +52,8 @@ export function NoMemoPanel() {
  * 函数体忽略它，但这次调用「有依赖」，次数一变就重算。
  */
 export function PassedDepPanel() {
-  const version = useVersion();
-  const now = readNowAt(version);
+  const clickCount = useClickCount();
+  const now = readNowAt(clickCount);
 
   return (
     <section>

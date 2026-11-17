@@ -1,6 +1,9 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import * as babel from "@babel/core";
+import typescriptPreset from "@babel/preset-typescript";
+import reactPreset from "@babel/preset-react";
+import reactCompilerPlugin from "babel-plugin-react-compiler";
 
 // React Compiler 只在构建阶段生效的话，开发页面就看不出问题。
 // 这里自己接管这一步：开发与构建都先过一遍编译器，保证页面跑的就是编译后的代码。
@@ -17,17 +20,13 @@ function reactCompiler(): Plugin {
         babelrc: false,
         configFile: false,
         // 剥掉 TS 类型，JSX 交给 React 17+ 的自动运行时。
-        presets: [
-          ["@babel/preset-typescript"],
-          ["@babel/preset-react", { runtime: "automatic", development: true }],
-        ],
+        presets: [typescriptPreset, [reactPreset, { runtime: "automatic", development: true }]],
         // 主角：编译器本体。
-        plugins: [["babel-plugin-react-compiler"]],
-        sourceMaps: true,
+        plugins: [reactCompilerPlugin],
       });
 
       if (!result?.code) return null;
-      return { code: result.code, map: result.map };
+      return { code: result.code };
     },
   };
 }
