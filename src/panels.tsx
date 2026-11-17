@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { readNow, readNowAt, useVersion } from "./store";
 
-// 三个面板显示同样两项：缓存里留下的时间戳、当前点击次数。
-// 时间戳不变＝那段计算没重跑；时间戳跟着点＝重算了。
+// 三个面板只显示一项：缓存里留下的时间戳。
+// 它不变＝那段计算没重跑；它跟着点＝重算了。
 
 /**
  * 被测写法：计算体直接读当下时间，依赖里写上点击次数，
@@ -21,7 +21,6 @@ export function VoidDepPanel() {
     <section>
       <h2>void 依赖</h2>
       <p>快照时间：{snapshot}</p>
-      <p>点击次数：{version}</p>
     </section>
   );
 }
@@ -43,7 +42,6 @@ export function NoMemoPanel() {
     <section>
       <h2>void 依赖 + 跳过编译</h2>
       <p>快照时间：{snapshot}</p>
-      <p>点击次数：{version}</p>
     </section>
   );
 }
@@ -60,7 +58,6 @@ export function PassedDepPanel() {
     <section>
       <h2>参数传参</h2>
       <p>快照时间：{now}</p>
-      <p>点击次数：{version}</p>
     </section>
   );
 }
